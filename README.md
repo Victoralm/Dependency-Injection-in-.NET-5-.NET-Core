@@ -9,7 +9,7 @@
 
 - NET Core injects objects of dependency classes through constructor or method
   by using built-in **IoC container**
-  - **IOC** - **Inversion of Control** Container: A framework for implementing automatic
+  - **IOC** - **Inversion of Control Container**: A framework for implementing automatic
     dependency injection
   - Manages object creation and its lifetime, also injects dependencies to their class
   - Creates an object of the specified class and also injects all of the

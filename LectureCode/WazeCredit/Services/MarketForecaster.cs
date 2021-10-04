@@ -7,6 +7,7 @@ namespace WazeCredit.Services
         public MarketResult GetMarketPrediction()
         {
             // Call API to do some complex calculations and current stock market forecast
+            // For course purpose we will hard code the result
 
             return new MarketResult
             {

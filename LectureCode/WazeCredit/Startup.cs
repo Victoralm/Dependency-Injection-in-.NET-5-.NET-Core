@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WazeCredit.Data;
+using WazeCredit.Services;
 
 namespace WazeCredit
 {
@@ -34,6 +35,16 @@ namespace WazeCredit
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            /**
+             * Three types of lifetime services:
+             * Transient<'interface', 'desired implementation to be used'>
+             * Code
+             * Singleton
+             */
+            services.AddTransient<IMarketForecaster, MarketForecaster>();
+            //services.AddTransient<IMarketForecaster, MarketForecasterV2>();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 

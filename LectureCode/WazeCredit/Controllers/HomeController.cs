@@ -13,6 +13,13 @@ namespace WazeCredit.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeVM HomeVM { get; set; }
+
+        public HomeController()
+        {
+            HomeVM = new HomeVM();
+        }
+
         //private readonly ILogger<HomeController> _logger;
 
         //public HomeController(ILogger<HomeController> logger)
@@ -22,23 +29,24 @@ namespace WazeCredit.Controllers
 
         public IActionResult Index()
         {
-            HomeVM homeVM = new HomeVM();
-            MarketForecaster marketForecaster = new MarketForecaster();
+            //HomeVM homeVM = new HomeVM();
+            //MarketForecaster marketForecaster = new MarketForecaster();
+            MarketForecasterV2 marketForecaster = new MarketForecasterV2();
             MarketResult currentMarket = marketForecaster.GetMarketPrediction();
 
             switch (currentMarket.MarketCondition)
             {
                 case MarketCondition.StableUp:
-                    homeVM.MarketForecast = "Market shows signs to go up in a stable state! It is a great sign to apply for credit applications!";
+                    HomeVM.MarketForecast = "Market shows signs to go up in a stable state! It is a great sign to apply for credit applications!";
                     break;
                 case MarketCondition.StableDown:
-                    homeVM.MarketForecast = "Market shows signs to go down in a stable state! It is a not a good sign to apply for credit applications! But extra credit is always piece of mind if you have handy when you need it.";
+                    HomeVM.MarketForecast = "Market shows signs to go down in a stable state! It is a not a good sign to apply for credit applications! But extra credit is always piece of mind if you have handy when you need it.";
                     break;
                 case MarketCondition.Volatile:
-                    homeVM.MarketForecast = "Market shows signs of volatility. In uncertain times, it is good to have credit handy if you need extra funds!";
+                    HomeVM.MarketForecast = "Market shows signs of volatility. In uncertain times, it is good to have credit handy if you need extra funds!";
                     break;
                 default:
-                    homeVM.MarketForecast = "Apply for a credit card using our application!";
+                    HomeVM.MarketForecast = "Apply for a credit card using our application!";
                     break;
             }
 

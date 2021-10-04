@@ -20,5 +20,30 @@
 - Dependency Injection (DI) is a pattern that can help developers decouple the
   different pieces of their applications
 
-- In ASP.NET Core, both framework services and application services can be
+- In ASP .NET Core, both framework services and application services can be
   injected into your classes, rather than being tightly coupled
+
+- DI is an integral part of ASP .NET Core (.NET 5)
+
+- Dependency Injection is a form of IoC (Inversion of Control)
+  - Inversion of Control design principle suggest that the inversion of carious
+    types of controls in object orientated design to achieve loose coupling
+    between the application classes
+
+- DI is the fifth principle of S.O.L.I.D.
+    - Five basic principles of object orientated programming which states that a
+      class should depend on abstraction and not upon the implementations
+    - According to the principles, a class should concentrate on fulfilling its
+      responsabilities and not on creating objects that it requires to fulfill
+      those responsabilities. And that's where DI comes into play, providing the
+      class with the required objects
+
+- Built-in IoC Container
+- The built-in container is represented by `IServiceProvider`
+  - `IServiceProvider` implementation supports constructor injection
+  - By default, the types of classes that are managed by IoC Container is called
+    Services. There are basically two types of Services
+- Types of service in ASP .NET Core (.NET 5)
+  - Framework Services: Services that are part of ASP .NET Core framework
+    itself. Ex: `IApplicationBuilder`, `IHostingEnvironment`, `IFactoryLogger`...
+  - Application Services: Custom Services made by the developers for the application

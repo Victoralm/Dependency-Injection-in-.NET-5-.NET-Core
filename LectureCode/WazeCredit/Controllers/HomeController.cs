@@ -14,9 +14,14 @@ namespace WazeCredit.Controllers
     public class HomeController : Controller
     {
         public HomeVM HomeVM { get; set; }
+        private readonly IMarketForecaster _marketForecaster;
 
-        public HomeController()
+        /// <summary>
+        /// Injecting IMarketForecaster as a Dependency
+        /// </summary>
+        public HomeController(IMarketForecaster marketForecaster)
         {
+            this._marketForecaster = marketForecaster;
             HomeVM = new HomeVM();
         }
 
@@ -29,10 +34,7 @@ namespace WazeCredit.Controllers
 
         public IActionResult Index()
         {
-            //HomeVM homeVM = new HomeVM();
-            //MarketForecaster marketForecaster = new MarketForecaster();
-            MarketForecasterV2 marketForecaster = new MarketForecasterV2();
-            MarketResult currentMarket = marketForecaster.GetMarketPrediction();
+            MarketResult currentMarket = this._marketForecaster.GetMarketPrediction();
 
             switch (currentMarket.MarketCondition)
             {
@@ -50,7 +52,7 @@ namespace WazeCredit.Controllers
                     break;
             }
 
-            return View(homeVM);
+            return View(HomeVM);
         }
 
         public IActionResult Privacy()

@@ -2,7 +2,7 @@
 
 namespace WazeCredit.Services
 {
-    public class MarketForecaster
+    public class MarketForecaster : IMarketForecaster
     {
         public MarketResult GetMarketPrediction()
         {

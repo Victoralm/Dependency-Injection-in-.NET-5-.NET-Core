@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using WazeCredit.Data;
 using WazeCredit.Middleware;
 using WazeCredit.Services;
+using WazeCredit.Services.LifetimeExample;
 using WazeCredit.Utility.AppSettingsClasses;
 using WazeCredit.Utility.DI_Config;
 
@@ -54,6 +55,10 @@ namespace WazeCredit
             services.Configure<TwilioSettings>(Configuration.GetSection("Twilio"));
             services.Configure<SendGridSettings>(Configuration.GetSection("SendGrid"));*/
             services.AddAppSettingsConfig(Configuration);
+
+            services.AddTransient<TransientService>();
+            services.AddScoped<ScopedService>();
+            services.AddSingleton<SingletonService>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }

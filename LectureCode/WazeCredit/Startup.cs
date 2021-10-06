@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WazeCredit.Data;
 using WazeCredit.Services;
+using WazeCredit.Utility.AppSettingsClasses;
 
 namespace WazeCredit
 {
@@ -44,6 +45,12 @@ namespace WazeCredit
              */
             services.AddTransient<IMarketForecaster, MarketForecaster>();
             //services.AddTransient<IMarketForecaster, MarketForecasterV2>();
+
+            // Configurations => gets the sections of appsettings.json and associate with the classes
+            services.Configure<WazeForecastSettings>(Configuration.GetSection("WazeForecast"));
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            services.Configure<TwilioSettings>(Configuration.GetSection("Twilio"));
+            services.Configure<SendGridSettings>(Configuration.GetSection("SendGrid"));
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }

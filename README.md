@@ -47,3 +47,47 @@
   - **Framework Services**: Services that are part of ASP .NET Core framework
     itself. Ex: `IApplicationBuilder`, `IHostingEnvironment`, `IFactoryLogger`...
   - **Application Services**: Custom Services made by the developers for the application
+
+## Service Lifetime ##
+
+### Singleton ###
+
+- Same instance for the life of the application (unless restarted)
+- Syntax to register:
+  ```cshapr
+  services.AddSingleton<>
+  ```
+- Should be used very carefully
+- Singleton service sends same instance for the life of the application
+- E.g. If you click on all vill or link on a website, whenever an instance is
+  required it will send same object. It will change only when application
+  restarts
+- It can be used for services that are expensive to instantiate.
+- Memory wil be allocated just once. So, Garbage Collector will have less things
+  to do
+
+### Scoped ###
+
+- Same instance for one scope (one request in most cases)
+- Syntax to register:
+  ```cshapr
+  services.AddScoped<>
+  ```
+- Not ideal for multi-threading
+- Scoped services sends a new instance for each request
+- E.g: If you click on a view or a link for that page load, if an instance is
+  requested 10 times, it will send the same object
+- An Entity Framework `Context` is a good candidate
+
+### Transient ###
+
+- Different instance every time the service is injected (or requested)
+- Syntax to register:
+  ```cshapr
+  services.AddTransient<>
+  ```
+- Always try to register a service as a Transient if unsure
+- Transient services sends a new instance every time it is requested
+- E.g: If you click on a view or a link for that page load, if an instance is
+  requested 10 times, it will send 10 different objects
+- Works best for light weight and stateless services

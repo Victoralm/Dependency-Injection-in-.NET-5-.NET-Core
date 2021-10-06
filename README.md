@@ -121,4 +121,18 @@
         }
     ```
 - View Injection
+  - Injection of dependencies into View Pages
+  - Example:
+  ```csharp
+  ...
+  @using Microsoft.Extensions.Options
+  @inject IOptions<WazeCredit.Utility.AppSettingsClasses.WazeForecastSettings> wazeForecastSettings
+  ...
+  <p>Current Market Prediction Status: @(wazeForecastSettings.Value.ForecastTrackerEnabled ? "Online" : "Offline")</p>
+  ```
 - Middleware Injection
+  - Allows injections on its constructor and methods, even that it works differently
+  - When injected on the constructor, the object remains the same. Since
+    middlewares are registered the first time the application runs, and it
+    remains the same object. Injections on its constructor also remains the same
+    while it exists (even Transient Services).

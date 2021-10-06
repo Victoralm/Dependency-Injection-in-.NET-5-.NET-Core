@@ -123,13 +123,13 @@
 - View Injection
   - Injection of dependencies into View Pages
   - Example:
-  ```csharp
-  ...
-  @using Microsoft.Extensions.Options
-  @inject IOptions<WazeCredit.Utility.AppSettingsClasses.WazeForecastSettings> wazeForecastSettings
-  ...
-  <p>Current Market Prediction Status: @(wazeForecastSettings.Value.ForecastTrackerEnabled ? "Online" : "Offline")</p>
-  ```
+    ```csharp
+    ...
+    @using Microsoft.Extensions.Options
+    @inject IOptions<WazeCredit.Utility.AppSettingsClasses.WazeForecastSettings> wazeForecastSettings
+    ...
+    <p>Current Market Prediction Status: @(wazeForecastSettings.Value.ForecastTrackerEnabled ? "Online" : "Offline")</p>
+    ```
 - Middleware Injection
   - Allows injections on its constructor and methods, even that it works differently
   - When injected on the constructor, the object remains the same. Since

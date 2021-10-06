@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WazeCredit.Data;
+using WazeCredit.Middleware;
 using WazeCredit.Services;
 using WazeCredit.Utility.AppSettingsClasses;
 using WazeCredit.Utility.DI_Config;
@@ -78,6 +79,9 @@ namespace WazeCredit
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Registreing the Middleware (runs every tima a request is made)
+            app.UseMiddleware<CustomMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

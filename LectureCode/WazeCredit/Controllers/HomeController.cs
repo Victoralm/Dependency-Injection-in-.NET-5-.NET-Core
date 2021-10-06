@@ -18,28 +18,13 @@ namespace WazeCredit.Controllers
         public HomeVM HomeVM { get; set; }
         private readonly IMarketForecaster _marketForecaster;
 
-        // For IOptions injection
-        private readonly StripeSettings _stripeOptions;
-        private readonly WazeForecastSettings _wazeForecastOptions;
-        private readonly TwilioSettings _twilioOptions;
-        private readonly SendGridSettings _sendGridOptions;
-
         /// <summary>
         /// Injecting IMarketForecaster as a Dependency
         /// Injecting IOptions<StripeSettings>, IOptions<WazeForecastSettings>, IOptions<TwilioSettings>, IOptions<SendGridSettings> as a Dependency
         /// </summary>
-        public HomeController(IMarketForecaster marketForecaster, 
-            IOptions<StripeSettings> stripeOptions, 
-            IOptions<WazeForecastSettings> wazeForecastOptions, 
-            IOptions<TwilioSettings> twilioOptions, 
-            IOptions<SendGridSettings> sendGridOptions)
+        public HomeController(IMarketForecaster marketForecaster)
         {
             this._marketForecaster = marketForecaster;
-
-            this._stripeOptions = stripeOptions.Value;
-            this._wazeForecastOptions = wazeForecastOptions.Value;
-            this._twilioOptions = twilioOptions.Value;
-            this._sendGridOptions = sendGridOptions.Value;
 
             HomeVM = new HomeVM();
         }
@@ -74,16 +59,21 @@ namespace WazeCredit.Controllers
             return View(HomeVM);
         }
 
-        public IActionResult AllConfigSettings()
+        public IActionResult AllConfigSettings(
+            [FromServices] IOptions<StripeSettings> stripeOptions,
+            [FromServices] IOptions<WazeForecastSettings> wazeForecastOptions,
+            [FromServices] IOptions<TwilioSettings> twilioOptions,
+            [FromServices] IOptions<SendGridSettings> sendGridOptions
+            )
         {
             List<string> messages = new List<string>();
-            messages.Add($"Waze config - Forecast Tracker: {this._wazeForecastOptions.ForecastTrackerEnabled}");
-            messages.Add($"Stripe config - Secret Key: {this._stripeOptions.SecretKey}");
-            messages.Add($"Stripe config - Publishable Key: {this._stripeOptions.PublishableKey}");
-            messages.Add($"Twilio config - Phone Number: {this._twilioOptions.PhoneNumber}");
-            messages.Add($"Twilio config - AuthToken: {this._twilioOptions.AuthToken}");
-            messages.Add($"Twilio config - Account Sid: {this._twilioOptions.AccountSid}");
-            messages.Add($"SendGrid config - Send GridKey: {this._sendGridOptions.SendGridKey}");
+            messages.Add($"Waze config - Forecast Tracker: {wazeForecastOptions.Value.ForecastTrackerEnabled}");
+            messages.Add($"Stripe config - Secret Key: {stripeOptions.Value.SecretKey}");
+            messages.Add($"Stripe config - Publishable Key: {stripeOptions.Value.PublishableKey}");
+            messages.Add($"Twilio config - Phone Number: {twilioOptions.Value.PhoneNumber}");
+            messages.Add($"Twilio config - AuthToken: {twilioOptions.Value.AuthToken}");
+            messages.Add($"Twilio config - Account Sid: {twilioOptions.Value.AccountSid}");
+            messages.Add($"SendGrid config - Send GridKey: {sendGridOptions.Value.SendGridKey}");
 
             return View(messages);
         }

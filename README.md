@@ -91,3 +91,34 @@
 - E.g: If you click on a view or a link for that page load, if an instance is
   requested 10 times, it will send 10 different objects
 - Works best for light weight and stateless services
+
+## Types of Injection ##
+
+- Constructor Injection
+- Action Injection
+  - Injection of dependency classes as parameters of IActionResult methods
+  - Useful if only a given method needs some dependencies, so they doesn't need
+    to be injected on the constructor of the class
+  - Example:
+    ```csharp
+    public IActionResult AllConfigSettings(
+            [FromServices] IOptions<StripeSettings> stripeOptions,
+            [FromServices] IOptions<WazeForecastSettings> wazeForecastOptions,
+            [FromServices] IOptions<TwilioSettings> twilioOptions,
+            [FromServices] IOptions<SendGridSettings> sendGridOptions
+            )
+        {
+            List<string> messages = new List<string>();
+            messages.Add($"Waze config - Forecast Tracker: {wazeForecastOptions.Value.ForecastTrackerEnabled}");
+            messages.Add($"Stripe config - Secret Key: {stripeOptions.Value.SecretKey}");
+            messages.Add($"Stripe config - Publishable Key: {stripeOptions.Value.PublishableKey}");
+            messages.Add($"Twilio config - Phone Number: {twilioOptions.Value.PhoneNumber}");
+            messages.Add($"Twilio config - AuthToken: {twilioOptions.Value.AuthToken}");
+            messages.Add($"Twilio config - Account Sid: {twilioOptions.Value.AccountSid}");
+            messages.Add($"SendGrid config - Send GridKey: {sendGridOptions.Value.SendGridKey}");
+
+            return View(messages);
+        }
+    ```
+- View Injection
+- Middleware Injection

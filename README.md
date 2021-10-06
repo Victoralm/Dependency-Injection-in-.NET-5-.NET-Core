@@ -136,3 +136,23 @@
     middlewares are registered the first time the application runs, and it
     remains the same object. Injections on its constructor also remains the same
     while it exists (even Transient Services).
+
+## Registering Services ##
+
+Alternative ways of registering a Service on Startup class:
+```csharp
+// Transient and Scoped
+// With abstraction (interface)
+services.AddTransient<Desired_Interface>(Desired_Implementation());
+services.AddTransient(typeof(Desired_Interface), typeof(Desired_Implementation));
+// Without abstraction (interface)
+services.AddTransient<Desired_Class>();
+services.AddTransient(typeof(Desired_Implementation));
+
+//Singleton
+// With abstraction (interface)
+services.AddSingleton<Desired_Interface>(new Desired_Implementation());
+// Without abstraction (interface)
+services.AddSingleton<Desired_Class>();
+services.AddSingleton(new Desired_Implementation());
+```

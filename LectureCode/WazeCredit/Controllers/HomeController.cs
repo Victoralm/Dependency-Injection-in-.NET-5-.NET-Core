@@ -18,6 +18,9 @@ namespace WazeCredit.Controllers
         public HomeVM HomeVM { get; set; }
         private readonly IMarketForecaster _marketForecaster;
 
+        [BindProperty]
+        private CreditApplication CreditModel { get; set; }
+
         /// <summary>
         /// Injecting IMarketForecaster as a Dependency
         /// Injecting IOptions<StripeSettings>, IOptions<WazeForecastSettings>, IOptions<TwilioSettings>, IOptions<SendGridSettings> as a Dependency
@@ -76,6 +79,12 @@ namespace WazeCredit.Controllers
             messages.Add($"SendGrid config - Send GridKey: {sendGridOptions.Value.SendGridKey}");
 
             return View(messages);
+        }
+
+        public IActionResult CreditApplication()
+        {
+            CreditModel = new CreditApplication();
+            return View(CreditModel);
         }
 
         public IActionResult Privacy()

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,10 @@ namespace WazeCredit
              */
             services.AddTransient<IMarketForecaster, MarketForecaster>();
             //services.AddTransient<IMarketForecaster, MarketForecasterV2>();
+
+            // Injects the dependency only if another implementation of the same interface doesn't exist on the application
+            // Useful on complex applications to avoid injection of multiple implementation of the same interface
+            services.TryAddTransient<IMarketForecaster, MarketForecasterV2>();
 
             // Configurations => gets the sections of appsettings.json and associate with the classes
             /*services.Configure<WazeForecastSettings>(Configuration.GetSection("WazeForecast"));

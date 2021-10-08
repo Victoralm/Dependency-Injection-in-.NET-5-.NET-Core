@@ -50,9 +50,19 @@ namespace WazeCredit
             services.AddTransient<IMarketForecaster, MarketForecaster>();
             //services.AddTransient<IMarketForecaster, MarketForecasterV2>();
 
-            // Injects the dependency only if another implementation of the same interface doesn't exist on the application
+            // Injects the dependency only if another implementation of the same interface doesn't exist on the application stack
             // Useful on complex applications to avoid injection of multiple implementation of the same interface
             services.TryAddTransient<IMarketForecaster, MarketForecasterV2>();
+
+            // Replacing a registered injected service on the application stack
+            services.AddTransient<IMarketForecaster, MarketForecasterV2>();
+            services.Replace(ServiceDescriptor.Transient<IMarketForecaster, MarketForecaster>());
+
+            // Removing all the implementations of some injected service on the application stack
+            services.RemoveAll<IMarketForecaster>();
+            // Adding the correct one again
+            services.AddTransient<IMarketForecaster, MarketForecaster>();
+
 
             // Configurations => gets the sections of appsettings.json and associate with the classes
             /*services.Configure<WazeForecastSettings>(Configuration.GetSection("WazeForecast"));

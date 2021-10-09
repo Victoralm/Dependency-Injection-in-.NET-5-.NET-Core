@@ -63,8 +63,18 @@ namespace WazeCredit
             // Adding the correct one again
             services.AddTransient<IMarketForecaster, MarketForecaster>();
 
-            services.AddScoped<IValidationChecker, AddressValidationChecker>();
-            services.AddScoped<IValidationChecker, CreditValidationChecker>();
+            //services.AddScoped<IValidationChecker, AddressValidationChecker>();
+            //services.AddScoped<IValidationChecker, CreditValidationChecker>();
+            // To avoid Duplications: Prevent the same injection to happen more than once on the application stack
+            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidationChecker, AddressValidationChecker>());
+            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidationChecker, CreditValidationChecker>());
+            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidationChecker, CreditValidationChecker>());  // Only the first one will be injected
+            // Even better:
+            services.TryAddEnumerable(new []
+            {
+                ServiceDescriptor.Scoped<IValidationChecker, AddressValidationChecker>(),
+                ServiceDescriptor.Scoped<IValidationChecker, CreditValidationChecker>(),
+            });
             services.AddScoped<ICreditValidator, CreditValidator>();
 
 

@@ -17,17 +17,19 @@ namespace WazeCredit.Controllers
     {
         public HomeVM HomeVM { get; set; }
         private readonly IMarketForecaster _marketForecaster;
+        private readonly ICreditValidator _creditValidator;
 
         [BindProperty]
-        private CreditApplication CreditModel { get; set; }
+        public CreditApplication CreditModel { get; set; }
 
         /// <summary>
         /// Injecting IMarketForecaster as a Dependency
         /// Injecting IOptions<StripeSettings>, IOptions<WazeForecastSettings>, IOptions<TwilioSettings>, IOptions<SendGridSettings> as a Dependency
         /// </summary>
-        public HomeController(IMarketForecaster marketForecaster)
+        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator)
         {
             this._marketForecaster = marketForecaster;
+            this._creditValidator = creditValidator;
 
             HomeVM = new HomeVM();
         }
@@ -84,7 +86,43 @@ namespace WazeCredit.Controllers
         public IActionResult CreditApplication()
         {
             CreditModel = new CreditApplication();
+
             return View(CreditModel);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ActionName("CreditApplication")]
+        public async Task<IActionResult> CreditApplicationPost()
+        {
+            if (ModelState.IsValid)
+            {
+                var (validationPassed, errorMessages) = await this._creditValidator.PassAllValidations(CreditModel);
+
+                CreditResult creditResult = new CreditResult()
+                {
+                    ErrorList = errorMessages,
+                    CreditID = 0,
+                    Success = validationPassed,
+                };
+
+                if (validationPassed)
+                {
+                    // add record to database
+                    return RedirectToAction(nameof(CreditResult), creditResult);
+                }
+                else
+                {
+                    // don't add record to database, but return the values to the view
+                    return RedirectToAction(nameof(CreditResult), creditResult);
+                }
+            }
+            return View(CreditModel);
+        }
+
+        public IActionResult CreditResult(CreditResult creditResult)
+        {
+            return View(creditResult);
         }
 
         public IActionResult Privacy()

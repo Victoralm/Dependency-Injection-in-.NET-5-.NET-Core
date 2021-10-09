@@ -63,6 +63,10 @@ namespace WazeCredit
             // Adding the correct one again
             services.AddTransient<IMarketForecaster, MarketForecaster>();
 
+            services.AddScoped<IValidationChecker, AddressValidationChecker>();
+            services.AddScoped<IValidationChecker, CreditValidationChecker>();
+            services.AddScoped<ICreditValidator, CreditValidator>();
+
 
             // Configurations => gets the sections of appsettings.json and associate with the classes
             /*services.Configure<WazeForecastSettings>(Configuration.GetSection("WazeForecast"));

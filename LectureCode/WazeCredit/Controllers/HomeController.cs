@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using WazeCredit.Data;
 using WazeCredit.Models;
 using WazeCredit.Models.ViewModels;
 using WazeCredit.Services;
@@ -18,6 +19,7 @@ namespace WazeCredit.Controllers
         public HomeVM HomeVM { get; set; }
         private readonly IMarketForecaster _marketForecaster;
         private readonly ICreditValidator _creditValidator;
+        private readonly ApplicationDbContext _db;
 
         [BindProperty]
         public CreditApplication CreditModel { get; set; }
@@ -26,10 +28,11 @@ namespace WazeCredit.Controllers
         /// Injecting IMarketForecaster as a Dependency
         /// Injecting IOptions<StripeSettings>, IOptions<WazeForecastSettings>, IOptions<TwilioSettings>, IOptions<SendGridSettings> as a Dependency
         /// </summary>
-        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator)
+        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator, ApplicationDbContext db)
         {
             this._marketForecaster = marketForecaster;
             this._creditValidator = creditValidator;
+            this._db = db;
 
             HomeVM = new HomeVM();
         }
@@ -109,6 +112,9 @@ namespace WazeCredit.Controllers
                 if (validationPassed)
                 {
                     // add record to database
+                    this._db.CreditApplicationModel.Add(CreditModel);
+                    this._db.SaveChanges();
+                    creditResult.CreditID = CreditModel.Id;
                     return RedirectToAction(nameof(CreditResult), creditResult);
                 }
                 else

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WazeCredit.Data;
+using WazeCredit.Data.Repository.IRepository;
 using WazeCredit.Models;
 using WazeCredit.Models.ViewModels;
 using WazeCredit.Services;
@@ -19,7 +20,7 @@ namespace WazeCredit.Controllers
         public HomeVM HomeVM { get; set; }
         private readonly IMarketForecaster _marketForecaster;
         private readonly ICreditValidator _creditValidator;
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
         // Already comes registered on the application stack by default, doesn't need to be registered manually on Startup
         private readonly ILogger _logger;
@@ -31,11 +32,11 @@ namespace WazeCredit.Controllers
         /// Injecting IMarketForecaster as a Dependency
         /// Injecting IOptions<StripeSettings>, IOptions<WazeForecastSettings>, IOptions<TwilioSettings>, IOptions<SendGridSettings> as a Dependency
         /// </summary>
-        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator, ApplicationDbContext db, ILogger<HomeController> logger)
+        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator, IUnitOfWork unitOfWork, ILogger<HomeController> logger)
         {
             this._marketForecaster = marketForecaster;
             this._creditValidator = creditValidator;
-            this._db = db;
+            this._unitOfWork = unitOfWork;
 
             this._logger = logger;
 
@@ -125,8 +126,8 @@ namespace WazeCredit.Controllers
                     CreditModel.CreditApproved = creditService(CreditModel.Salary > 50000 ? CreditApprovedEnum.High : CreditApprovedEnum.Low)
                                                     .GetCreditApproved(CreditModel);
                     // add record to database
-                    this._db.CreditApplicationModel.Add(CreditModel);
-                    this._db.SaveChanges();
+                    this._unitOfWork.CreditApplication.Add(CreditModel);
+                    this._unitOfWork.Save();
                     creditResult.CreditID = CreditModel.Id;
                     creditResult.CreditApproved = CreditModel.CreditApproved;
                     return RedirectToAction(nameof(CreditResult), creditResult);

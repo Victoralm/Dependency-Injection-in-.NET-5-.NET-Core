@@ -6,23 +6,23 @@ namespace WazeCredit.Data.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _db;
-        public ICreditApplicationRepository CreditApplicationRepository { get; private set; }
+        public ICreditApplicationRepository CreditApplication { get; private set; }
 
 
         public UnitOfWork(ApplicationDbContext db)
         {
             this._db = db;
-            CreditApplicationRepository = new CreditApplicationRepository(this._db);
+            CreditApplication = new CreditApplicationRepository(this._db);
         }
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+            this._db.Dispose();
         }
 
         public void Save()
         {
-            throw new System.NotImplementedException();
+            this._db.SaveChanges();
         }
     }
 }

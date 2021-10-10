@@ -21,6 +21,9 @@ namespace WazeCredit.Controllers
         private readonly ICreditValidator _creditValidator;
         private readonly ApplicationDbContext _db;
 
+        // Already comes registered on the application stack by default, doesn't need to be registered manually on Startup
+        private readonly ILogger _logger;
+
         [BindProperty]
         public CreditApplication CreditModel { get; set; }
 
@@ -28,11 +31,13 @@ namespace WazeCredit.Controllers
         /// Injecting IMarketForecaster as a Dependency
         /// Injecting IOptions<StripeSettings>, IOptions<WazeForecastSettings>, IOptions<TwilioSettings>, IOptions<SendGridSettings> as a Dependency
         /// </summary>
-        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator, ApplicationDbContext db)
+        public HomeController(IMarketForecaster marketForecaster, ICreditValidator creditValidator, ApplicationDbContext db, ILogger<HomeController> logger)
         {
             this._marketForecaster = marketForecaster;
             this._creditValidator = creditValidator;
             this._db = db;
+
+            this._logger = logger;
 
             HomeVM = new HomeVM();
         }
@@ -46,6 +51,8 @@ namespace WazeCredit.Controllers
 
         public IActionResult Index()
         {
+            this._logger.LogInformation("Home Controller Index Action Called");
+
             MarketResult currentMarket = this._marketForecaster.GetMarketPrediction();
 
             switch (currentMarket.MarketCondition)
@@ -63,6 +70,8 @@ namespace WazeCredit.Controllers
                     HomeVM.MarketForecast = "Apply for a credit card using our application!";
                     break;
             }
+
+            this._logger.LogInformation("Home Controller Index Action Ended");
 
             return View(HomeVM);
         }
